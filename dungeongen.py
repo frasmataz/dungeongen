@@ -2,25 +2,34 @@ import tiles
 from room import RoomProps
 from room import Room
 import random
+import sys
 import numpy as np
-from termcolor import cprint
+from termcolor import colored, cprint
 from pprint import pprint
 
 mapx, mapy = 50, 150
+firstFrame = True
 
 def setupMap():
     return [[tiles.Wall() for y in range(mapy)] for x in range(mapx)]
 
 def printmap(map):
+    global firstFrame
+    if not firstFrame:
+        for i in range(mapx + 2):
+            sys.stdout.write("\033[F")
+
+    output = ''
     for i in range(mapx):
         for j in range(mapy):
             if type(map[i][j]) is tiles.Wall:
-                print('.', end='')
+                output += '.'
             elif type(map[i][j]) is tiles.Air:
-                cprint(' ', 'white', map[i][j].bgcolor, end='')
-        print()
+                output += colored(' ', 'white', map[i][j].bgcolor)
+        output += '\n'
+    print(output)
     print()
-
+    firstFrame = False
 
 def rectCollide(x1, y1, w1, h1, x2, y2, w2, h2):
     x1 = x1 - 1
