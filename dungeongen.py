@@ -34,12 +34,12 @@ def printmap(map):
 def rectCollide(x1, y1, w1, h1, x2, y2, w2, h2):
     x1 = x1 - 1
     y1 = y1 - 1
-    w1 = w1 + 2
-    h1 = h1 + 2
+    w1 = w1 + 1
+    h1 = h1 + 1
     x2 = x2 - 1
     y2 = y2 - 1
-    w2 = w2 + 2
-    h2 = h2 + 2
+    w2 = w2 + 1
+    h2 = h2 + 1
     return (x1 < x2 + w2 and
             x1 + w1 > x2 and
             y1 < y2 + h2 and
@@ -73,9 +73,10 @@ def addRooms(map):
 
     #Shoogle rooms about until they're not touching
     roomsAreColliding = True
+    cycles = 0
 
     while roomsAreColliding:
-
+        cycles = cycles + 1
         for room in rooms:
             room.isColliding = False
             room.setBgColor('on_green')
@@ -107,6 +108,7 @@ def addRooms(map):
 
         printmap(map)
 
+    print('Finished generating rooms in ' + str(cycles) + ' cycles')
     return map
 
 
