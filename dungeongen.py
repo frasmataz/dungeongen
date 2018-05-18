@@ -1,26 +1,25 @@
 import tiles
+from room import RoomProps
+from room import Room
 import random
+import numpy as np
+from termcolor import cprint
 from pprint import pprint
 
 mapx, mapy = 30, 50
 
-roomGenProps = {
-    'minSize': [2, 3],
-    'maxSize': [10, 15],
-    'minNoOfRooms': 2,
-    'maxNoOfRooms': 25
-}
+def setupMap():
+    return [[tiles.Wall() for y in range(mapy)] for x in range(mapx)]
 
-map = [[tiles.Wall() for y in range(mapy)] for x in range(mapx)]
-
-def printmap():
+def printmap(map):
     for i in range(mapx):
         for j in range(mapy):
             if type(map[i][j]) is tiles.Wall:
-                print('#', end='')
+                print('.', end='')
             elif type(map[i][j]) is tiles.Air:
-                print(' ', end='')
+                cprint(' ', 'white', map[i][j].bgcolor, end='')
         print()
+
 
 def rectCollide(x1, y1, w1, h1, x2, y2, w2, h2):
     x1 = x1 - 1
@@ -37,43 +36,49 @@ def rectCollide(x1, y1, w1, h1, x2, y2, w2, h2):
             h1 + y1 > y2)
 
 
-def addRooms():
+def addRooms(map):
     print('Generating rooms..')
-    noOfRooms = random.randint(roomGenProps['minNoOfRooms'], roomGenProps['maxNoOfRooms'])
+    noOfRooms = random.randint(RoomProps.minNoOfRooms, RoomProps.maxNoOfRooms)
     rooms = []
 
-    while len(rooms) < noOfRooms:
-        width = random.randint(roomGenProps['minSize'][0], roomGenProps['maxSize'][0])
-        height = random.randint(roomGenProps['minSize'][1], roomGenProps['maxSize'][1])
-        x = random.randint(0, mapx-width)
-        y = random.randint(0, mapy-height)
+    for i in range(noOfRooms):
+        #Create a room
+        roomValid = False
+        room = None
 
-        spaceIsClear = True
+        while not roomValid:
+            w = int(np.random.normal(RoomProps.meanWidth, RoomProps.sizeStdDev))
+            h = int(np.random.normal(RoomProps.meanHeight, RoomProps.sizeStdDev))
 
-        if len(rooms) > 0:
-            for room in rooms:
-                if rectCollide(room['x'], room['y'], room['w'], room['h'], x, y, width, height):
-                    spaceIsClear = False
+            if w > 0 and h > 0:
+                roomValid = True
+                room = Room(w, h)
 
-        if spaceIsClear:
-            rooms.append({
-                'x': x,
-                'y': y,
-                'w': width,
-                'h': height
-            })
+        x = int(np.random.normal((mapx-w)/2, 1.0))
+        y = int(np.random.normal((mapy-h)/2, 1.0))
+
+        room.setPos(x, y)
+        room.setBgColor(random.choice(RoomProps.bgcolors))
+        rooms.append(room)
+
+    #Shoogle rooms about until they're not touching
+    # roomsAreColliding = True
+    # for room in rooms:
 
     for room in rooms:
-        for x in range(room['x'], room['x'] + room['w']):
-            for y in range(room['y'], room['y'] + room['h']):
+        for x in range(room.x, room.x + room.w):
+            for y in range(room.y, room.y + room.h):
                 map[x][y] = tiles.Air()
+                map[x][y].setBgColor(room.bgcolor)
 
-    print('Done generating rooms')
+    return map
 
 
+def generate(map):
+    map = addRooms(map)
+    return map
 
-def generate():
-    addRooms()
 
-generate()
-printmap()
+map = setupMap()
+map = generate(map)
+printmap(map)

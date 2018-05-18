@@ -1,6 +1,13 @@
 class Tile:
     items = []
-    colour = ''
+    color = ''
+    bgcolor = ''
+
+    def setColor(self, color):
+        self.color = color
+
+    def setBgColor(self, bgcolor):
+        self.bgcolor = bgcolor
 
 class Wall(Tile):
     def __init__(self):
