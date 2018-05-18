@@ -12,12 +12,14 @@ class RoomProps:
 class Room:
     def __init__(self):
         self.isColliding = False
+        self.shoogleDir = [1,1]
         pass
 
     def __init__(self, w, h):
         self.w = w
         self.h = h
         self.isColliding = False
+        self.shoogleDir = [1,1]
 
     def setPos(self, x, y):
         self.x = x
@@ -25,8 +27,8 @@ class Room:
 
     def shoogle(self, mapx, mapy):
         #Randomly move X and Y by one
-        dx = random.randint(-1, 1)
-        dy = random.randint(-1, 1)
+        dx = random.choice([0, self.shoogleDir[0]])
+        dy = random.choice([0, self.shoogleDir[1]])
 
         if (self.x + self.w + dx < mapx and
             self.x + dx >= 0 and
@@ -36,7 +38,8 @@ class Room:
             self.x = self.x + dx
             self.y = self.y + dy
 
-
+    def getMidpoint(self):
+        return [self.x + (self.w / 2), self.y + (self.h / 2)]
 
     def setColor(self, color):
         self.color = color

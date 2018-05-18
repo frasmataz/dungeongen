@@ -92,6 +92,21 @@ def addRooms(map):
                         room1.setBgColor('on_red')
                         room2.setBgColor('on_red')
 
+                        if room1.getMidpoint()[0] >= room2.getMidpoint()[0]:
+                            room1.shoogleDir[0] = 1
+                            room2.shoogleDir[0] = -1
+                        else:
+                            room1.shoogleDir[0] = -1
+                            room2.shoogleDir[0] = 1
+
+                        if room1.getMidpoint()[1] >= room2.getMidpoint()[1]:
+                            room1.shoogleDir[1] = 1
+                            room2.shoogleDir[1] = -1
+                        else:
+                            room1.shoogleDir[1] = -1
+                            room2.shoogleDir[1] = 1
+
+
         map = setupMap()
 
         for room in rooms:
