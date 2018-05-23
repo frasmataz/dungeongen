@@ -1,25 +1,21 @@
 import random
 
 class RoomProps:
-    meanWidth = 5
-    meanHeight = 10
-    sizeStdDev = 2
-    minNoOfRooms = 10
-    maxNoOfRooms = 50
+    meanWidth = 2
+    meanHeight = 6
+    sizeStdDev = 10
+    minNoOfRooms = 3
+    maxNoOfRooms = 8
     colors = ['grey', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
     bgcolors = ['on_grey', 'on_red', 'on_green', 'on_yellow', 'on_blue', 'on_magenta', 'on_cyan', 'on_white']
 
 class Room:
-    def __init__(self):
-        self.isColliding = False
-        self.shoogleDir = [1,1]
-        pass
-
     def __init__(self, w, h):
         self.w = w
         self.h = h
         self.isColliding = False
         self.shoogleDir = [1,1]
+        self.bgcolor = None
 
     def setPos(self, x, y):
         self.x = x
@@ -39,7 +35,7 @@ class Room:
             self.y = self.y + dy
 
     def getMidpoint(self):
-        return [self.x + (self.w / 2), self.y + (self.h / 2)]
+        return [int(self.x + (self.w / 2)), int(self.y + (self.h / 2))]
 
     def setColor(self, color):
         self.color = color
