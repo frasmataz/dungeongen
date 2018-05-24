@@ -143,10 +143,56 @@ def addRooms(map):
             if pixel[0] < mapx and pixel[1] < mapy:
                 map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_blue'
 
+    #Carve corridors
+    for edge in tree_edges:
+        #Randomly decide which axis to draw first
+        x_first = bool(random.getrandbits(1))
+        if x_first:
+            if edge[0][0] < edge[1][0]:
+                x1 = edge[0][0]
+                x2 = edge[1][0]
+            else:
+                x1 = edge[1][0]
+                x2 = edge[0][0]
+            for x in range(x1, x2):
+                print(x)
+                map[x][edge[0][1]] = tiles.Air()
+
+            if edge[0][1] < edge[1][1]:
+                y1 = edge[0][1]
+                y2 = edge[1][1]
+            else:
+                y1 = edge[1][1]
+                y2 = edge[0][1]
+            for y in range(y1, y2+1):
+                print(y)
+                map[edge[1][0]][y] = tiles.Air()
+        else:
+            if edge[0][1] < edge[1][1]:
+                y1 = edge[0][1]
+                y2 = edge[1][1]
+            else:
+                y1 = edge[1][1]
+                y2 = edge[0][1]
+            for y in range(y1, y2 + 1):
+                print(y)
+                map[edge[0][0]][y] = tiles.Air()
+
+            if edge[0][0] < edge[1][0]:
+                x1 = edge[0][0]
+                x2 = edge[1][0]
+            else:
+                x1 = edge[1][0]
+                x2 = edge[0][0]
+            for x in range(x1, x2):
+                print(x)
+                map[x][edge[1][1]] = tiles.Air()
+
     #Color room midpoints red
     #Again, not necessary, just for debugging
     for mp in midpoints:
         map[mp[0]][mp[1]].bgcolor = 'on_red'
+
 
     #Print map to terminal
     printmap(map)
