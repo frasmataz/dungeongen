@@ -135,6 +135,14 @@ def addRooms(map):
             if pixel[0] < mapx and pixel[1] < mapy:
                 map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_green'
 
+    #Calculate minimum spanning tree
+    tree_edges = util.minimum_tree(midpoints.tolist())
+
+    for edge in tree_edges:
+        for pixel in util.interpolate_pixels_along_line(edge[0][0], edge[0][1], edge[1][0], edge[1][1]):
+            if pixel[0] < mapx and pixel[1] < mapy:
+                map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_blue'
+
     #Color room midpoints red
     #Again, not necessary, just for debugging
     for mp in midpoints:

@@ -1,4 +1,7 @@
 import math
+import random
+import sys
+from pprint import pprint
 
 def rectCollide(x1, y1, w1, h1, x2, y2, w2, h2):
     x1 = x1 - 1
@@ -86,4 +89,35 @@ def interpolate_pixels_along_line(x0, y0, x1, y1):
 
     return pixels
 
+def calculate_distance(p1, p2):
+    #Calculate distance between points p1 and p2
+    #p1 and p2 are expected to have format [x, y]
+    return math.sqrt(math.pow(p2[0] - p1[0], 2) + math.pow(p2[1] - p1[1], 2))
 
+def minimum_tree(points):
+    #Creates a minimum-spanning tree from a set of points, based on Prim's algorithm.
+    out_of_tree = points
+    in_tree = []
+    edges = []
+
+    first_point = random.choice(out_of_tree)
+    in_tree.append(first_point)
+    out_of_tree.remove(first_point)
+
+    while len(out_of_tree) > 0:
+        shortest_edge = sys.maxsize
+        shortest_edge_point_in_tree = None
+        shortest_edge_point_out_of_tree = None
+        for i in in_tree:
+            for o in out_of_tree:
+                d = calculate_distance(i, o)
+                if d < shortest_edge:
+                    shortest_edge = d
+                    shortest_edge_point_in_tree = i
+                    shortest_edge_point_out_of_tree = o
+
+        in_tree.append(shortest_edge_point_out_of_tree)
+        out_of_tree.remove(shortest_edge_point_out_of_tree)
+        edges.append([shortest_edge_point_in_tree, shortest_edge_point_out_of_tree])
+
+    return edges
