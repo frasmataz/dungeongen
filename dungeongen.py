@@ -11,6 +11,7 @@ from pprint import pprint
 
 mapx, mapy = 50, 50
 firstFrame = True
+level_gen_debug = False
 
 def setupMap():
     #Return a new map of wall tiles
@@ -120,28 +121,30 @@ def addRooms(map):
 
     #Draw lines to visualise the generated graph
     #Not necessary, but nice for debugging
-    for tri in midpoints[tris.simplices]:
-        a = tri[0]
-        b = tri[1]
-        c = tri[2]
+    if level_gen_debug:
+        for tri in midpoints[tris.simplices]:
+            a = tri[0]
+            b = tri[1]
+            c = tri[2]
 
-        for pixel in util.interpolate_pixels_along_line(a[0], a[1], b[0], b[1]):
-            if pixel[0] < mapx and pixel[1] < mapy:
-                map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_green'
-        for pixel in util.interpolate_pixels_along_line(b[0], b[1], c[0], c[1]):
-            if pixel[0] < mapx and pixel[1] < mapy:
-                map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_green'
-        for pixel in util.interpolate_pixels_along_line(a[0], a[1], c[0], c[1]):
-            if pixel[0] < mapx and pixel[1] < mapy:
-                map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_green'
+            for pixel in util.interpolate_pixels_along_line(a[0], a[1], b[0], b[1]):
+                if pixel[0] < mapx and pixel[1] < mapy:
+                    map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_green'
+            for pixel in util.interpolate_pixels_along_line(b[0], b[1], c[0], c[1]):
+                if pixel[0] < mapx and pixel[1] < mapy:
+                    map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_green'
+            for pixel in util.interpolate_pixels_along_line(a[0], a[1], c[0], c[1]):
+                if pixel[0] < mapx and pixel[1] < mapy:
+                    map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_green'
 
     #Calculate minimum spanning tree
     tree_edges = util.minimum_tree(midpoints.tolist())
 
-    for edge in tree_edges:
-        for pixel in util.interpolate_pixels_along_line(edge[0][0], edge[0][1], edge[1][0], edge[1][1]):
-            if pixel[0] < mapx and pixel[1] < mapy:
-                map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_blue'
+    if level_gen_debug:
+        for edge in tree_edges:
+            for pixel in util.interpolate_pixels_along_line(edge[0][0], edge[0][1], edge[1][0], edge[1][1]):
+                if pixel[0] < mapx and pixel[1] < mapy:
+                    map[int(pixel[0])][int(pixel[1])].bgcolor = 'on_blue'
 
     #Carve corridors
     for edge in tree_edges:
@@ -190,8 +193,9 @@ def addRooms(map):
 
     #Color room midpoints red
     #Again, not necessary, just for debugging
-    for mp in midpoints:
-        map[mp[0]][mp[1]].bgcolor = 'on_red'
+    if level_gen_debug:
+        for mp in midpoints:
+            map[mp[0]][mp[1]].bgcolor = 'on_red'
 
 
     #Print map to terminal
